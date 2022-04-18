@@ -1,0 +1,70 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Feb  5 16:35:54 2022
+
+@author: HP
+"""
+
+# Linear Regression
+
+# Load the essential libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Load the data set
+data = pd.read_csv('Employee Salary_Data.csv')
+
+# splitting the IV
+X = data.iloc[:, 0:1].values
+
+# splitting the DV
+y = data.iloc[:,-1].values
+
+# splitting the data into train and test
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# fit the linear regression model to the data
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# predict the results
+y_pred = regressor.predict(X_test)
+
+# evaluate the model
+from sklearn.metrics import r2_score
+score = r2_score(y_test, y_pred)
+
+# Visualise the Train data
+plt.scatter(X_train, y_train, color='red')
+plt.plot(X_train, regressor.predict(X_train), color='blue')
+plt.title('YE Vs Salary')
+plt.xlabel('YE')
+plt.ylabel('Salary')
+plt.grid()
+plt.show()
+
+
+# To view group bar chart of y_test and y_pred
+x = np.arange(len(y_pred))  # the label locations
+width = 0.35  # the width of the bars
+
+fig, ax = plt.subplots()
+rects1 = ax.bar(x - width/2, y_test, width, label='Actual')
+rects2 = ax.bar(x + width/2, y_pred, width, label='Pred')
+
+# Add some text for labels, title and custom x-axis tick labels, etc.
+ax.set_ylabel('Salary')
+ax.set_title('YE Vs Salary')
+ax.set_xticks(x, [1,2,3,4,5,6])
+ax.legend()
+ax.bar_label(rects1, padding=3)
+ax.bar_label(rects2, padding=3)
+
+fig.tight_layout()
+
+plt.show()
+
+
